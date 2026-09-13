@@ -48,21 +48,42 @@ const userSchema = new mongoose.Schema(
     }
 );
 
-userSchema.pre("save", async function (next) {
+/*
+|--------------------------------------------------------------------------
+| Password Hash Middleware
+|--------------------------------------------------------------------------
+| This middleware automatically hashes the password before saving
+| the user to MongoDB.
+|
+| We are using async middleware, so we DO NOT use next().
+|--------------------------------------------------------------------------
+*/
 
+userSchema.pre("save", async function () {
+
+    // If password was not changed, don't hash it again.
     if (!this.isModified("password")) {
-        return next();
+        return;
     }
 
+    // Generate salt
     const salt = await bcrypt.genSalt(12);
 
+    // Hash password
     this.password = await bcrypt.hash(
         this.password,
         salt
     );
-
-    next();
 });
+
+/*
+|--------------------------------------------------------------------------
+| Password Comparison Method
+|--------------------------------------------------------------------------
+| Used during login to compare the plain-text password entered by
+| the user with the hashed password stored in MongoDB.
+|--------------------------------------------------------------------------
+*/
 
 userSchema.methods.comparePassword = async function (
     plainPassword
@@ -77,3 +98,7 @@ module.exports = mongoose.model(
     "User",
     userSchema
 );
+
+
+
+
