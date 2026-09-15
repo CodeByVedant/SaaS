@@ -1,3 +1,4 @@
+
 const mongoose = require("mongoose");
 
 const workspaceSchema = new mongoose.Schema(
@@ -13,8 +14,10 @@ const workspaceSchema = new mongoose.Schema(
         slug: {
             type: String,
             required: true,
+            lowercase: true,
             trim: true,
-            lowercase: true
+            minlength: 2,
+            maxlength: 120
         },
 
         description: {
@@ -39,7 +42,8 @@ const workspaceSchema = new mongoose.Schema(
 
         deletedAt: {
             type: Date,
-            default: null
+            default: null,
+            index: true
         }
     },
     {
@@ -47,12 +51,36 @@ const workspaceSchema = new mongoose.Schema(
     }
 );
 
+/*
+|--------------------------------------------------------------------------
+| Indexes
+|--------------------------------------------------------------------------
+*/
+
+// Quickly find workspaces owned by a user.
 workspaceSchema.index({
     owner: 1,
-    slug: 1
+    isActive: 1
 });
+
+// Prevent duplicate workspace slugs for the same owner.
+workspaceSchema.index(
+    {
+        owner: 1,
+        slug: 1
+    },
+    {
+        unique: true
+    }
+);
 
 module.exports = mongoose.model(
     "Workspace",
     workspaceSchema
 );
+
+
+
+
+
+

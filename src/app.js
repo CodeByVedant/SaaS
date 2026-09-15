@@ -7,6 +7,9 @@ const morgan = require("morgan");
 const authRoutes =
     require("./routes/auth.routes");
 
+const workspaceRoutes =
+    require("./routes/workspace.routes");
+
 const notFound =
     require("./middlewares/notFound.middleware");
 
@@ -68,6 +71,11 @@ app.get(
 app.use(
     "/api/v1/auth",
     authRoutes
+);
+
+app.use(
+    "/api/v1/workspaces",
+    workspaceRoutes
 );
 
 app.use(notFound);

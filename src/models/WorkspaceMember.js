@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 const {
     USER_ROLES
 } = require("../utils/constants");
@@ -22,8 +23,8 @@ const workspaceMemberSchema = new mongoose.Schema(
         role: {
             type: String,
             enum: Object.values(USER_ROLES),
-            default: USER_ROLES.MEMBER,
-            required: true
+            required: true,
+            default: USER_ROLES.MEMBER
         },
 
         joinedAt: {
@@ -36,6 +37,15 @@ const workspaceMemberSchema = new mongoose.Schema(
     }
 );
 
+/*
+|--------------------------------------------------------------------------
+| Compound Unique Index
+|--------------------------------------------------------------------------
+|
+| One user can belong to a workspace only once.
+|
+*/
+
 workspaceMemberSchema.index(
     {
         workspace: 1,
@@ -46,7 +56,19 @@ workspaceMemberSchema.index(
     }
 );
 
+/*
+|--------------------------------------------------------------------------
+| Useful Query Index
+|--------------------------------------------------------------------------
+*/
+
+workspaceMemberSchema.index({
+    user: 1,
+    role: 1
+});
+
 module.exports = mongoose.model(
     "WorkspaceMember",
     workspaceMemberSchema
 );
+
