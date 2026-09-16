@@ -10,6 +10,9 @@ const authRoutes =
 const workspaceRoutes =
     require("./routes/workspace.routes");
 
+const memberRoutes =
+    require("./routes/member.routes");
+
 const notFound =
     require("./middlewares/notFound.middleware");
 
@@ -77,6 +80,8 @@ app.use(
     "/api/v1/workspaces",
     workspaceRoutes
 );
+
+app.use("/api/v1/workspaces/:workspaceId/members", memberRoutes);
 
 app.use(notFound);
 
