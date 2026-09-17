@@ -13,11 +13,16 @@ const workspaceRoutes =
 const memberRoutes =
     require("./routes/member.routes");
 
+const projectRoutes =
+    require("./routes/project.routes");
+
 const notFound =
     require("./middlewares/notFound.middleware");
 
 const errorHandler =
     require("./middlewares/error.middleware");
+
+
 
 const app = express();
 
@@ -82,6 +87,11 @@ app.use(
 );
 
 app.use("/api/v1/workspaces/:workspaceId/members", memberRoutes);
+
+app.use(
+    "/api/v1/workspaces/:workspaceId/projects",
+    projectRoutes
+);
 
 app.use(notFound);
 
