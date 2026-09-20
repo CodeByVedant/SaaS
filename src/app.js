@@ -16,6 +16,9 @@ const memberRoutes =
 const projectRoutes =
     require("./routes/project.routes");
 
+const taskRoutes =
+    require("./routes/task.routes");
+
 const notFound =
     require("./middlewares/notFound.middleware");
 
@@ -92,6 +95,8 @@ app.use(
     "/api/v1/workspaces/:workspaceId/projects",
     projectRoutes
 );
+
+app.use("/api/v1/workspaces/:workspaceId/projects/:projectId/tasks", taskRoutes);
 
 app.use(notFound);
 
